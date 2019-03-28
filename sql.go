@@ -22,7 +22,7 @@ const scanMethod = `func (i *%[1]s) Scan(value interface{}) error {
 		str = string(bytes[:])
 	}
 
-	val, err := %[1]sString(str)
+	val, err := enum%[1]sOf(str)
 	if err != nil {
 		return err
 	}

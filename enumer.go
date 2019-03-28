@@ -1,46 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Arguments to format are:
 //	[1]: type name
-const stringNameToValueMethod = `// %[1]sString retrieves an enum value from the enum constants string name.
+const stringNameToValueMethod = `// enum%[1]s retrieves an enum value from the enum constants string name.
 // Throws an error if the param is not part of the enum.
-func %[1]sString(s string) (%[1]s, error) {
-	if val, ok := _%[1]sNameToValueMap[s]; ok {
+func enum%[1]sOf(s string) (%[1]s, error) {
+	if val, ok := enum%[1]sMap[s]; ok {
 		return val, nil
 	}
 	return 0, fmt.Errorf("%%s does not belong to %[1]s values", s)
-}
-`
-
-// Arguments to format are:
-//	[1]: type name
-const stringValuesMethod = `// %[1]sValues returns all values of the enum
-func %[1]sValues() []%[1]s {
-	return _%[1]sValues
-}
-`
-
-// Arguments to format are:
-//	[1]: type name
-const stringBelongsMethodLoop = `// IsA%[1]s returns "true" if the value is listed in the enum definition. "false" otherwise
-func (i %[1]s) IsA%[1]s() bool {
-	for _, v := range _%[1]sValues {
-		if i == v {
-			return true
-		}
-	}
-	return false
-}
-`
-
-// Arguments to format are:
-//	[1]: type name
-const stringBelongsMethodSet = `// IsA%[1]s returns "true" if the value is listed in the enum definition. "false" otherwise
-func (i %[1]s) IsA%[1]s() bool {
-	_, ok := _%[1]sMap[i] 
-	return ok
 }
 `
 
@@ -48,7 +20,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 	// At this moment, either "g.declareIndexAndNameVars()" or "g.declareNameVars()" has been called
 
 	// Print the slice of values
-	g.Printf("\nvar _%sValues = []%s{", typeName, typeName)
+	g.Printf("\nvar enum%sValues = []%s{", typeName, typeName)
 	for _, values := range runs {
 		for _, value := range values {
 			g.Printf("\t%s, ", value.str)
@@ -57,7 +29,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 	g.Printf("}\n\n")
 
 	// Print the map between name and value
-	g.Printf("\nvar _%sNameToValueMap = map[string]%s{\n", typeName, typeName)
+	g.Printf("\nvar enum%sMap = map[string]%s{\n", typeName, typeName)
 	thereAreRuns := len(runs) > 1 && len(runs) <= runsThreshold
 	var n int
 	var runID string
@@ -70,7 +42,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 		}
 
 		for _, value := range values {
-			g.Printf("\t_%sName%s[%d:%d]: %s,\n", typeName, runID, n, n+len(value.name), &value)
+			g.Printf("\tenum%sRepr%s[%d:%d]: %s,\n", typeName, runID, n, n+len(value.name), &value)
 			n += len(value.name)
 		}
 	}
@@ -78,12 +50,6 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 
 	// Print the basic extra methods
 	g.Printf(stringNameToValueMethod, typeName)
-	g.Printf(stringValuesMethod, typeName)
-	if len(runs) < runsThreshold {
-		g.Printf(stringBelongsMethodLoop, typeName)
-	} else { // There is a map of values, the code is simpler then
-		g.Printf(stringBelongsMethodSet, typeName)
-	}
 }
 
 // Arguments to format are:
@@ -102,7 +68,7 @@ func (i *%[1]s) UnmarshalJSON(data []byte) error {
 	}
 
 	var err error
-	*i, err = %[1]sString(s)
+	*i, err = enum%[1]sOf(s)
 	return err
 }
 `
@@ -122,7 +88,7 @@ func (i %[1]s) MarshalText() ([]byte, error) {
 // UnmarshalText implements the encoding.TextUnmarshaler interface for %[1]s
 func (i *%[1]s) UnmarshalText(text []byte) error {
 	var err error
-	*i, err = %[1]sString(string(text))
+	*i, err = enum%[1]sOf(string(text))
 	return err
 }
 `
@@ -147,7 +113,7 @@ func (i *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	var err error
-	*i, err = %[1]sString(s)
+	*i, err = enum%[1]sOf(s)
 	return err
 }
 `
