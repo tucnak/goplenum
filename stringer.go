@@ -233,7 +233,7 @@ func (g *Generator) parsePackage(directory string, names []string, text interfac
 		if !strings.HasSuffix(name, ".go") {
 			continue
 		}
-		parsedFile, err := parser.ParseFile(fs, name, text, 0)
+		parsedFile, err := parser.ParseFile(fs, name, text, parser.ParseComments)
 		if err != nil {
 			log.Fatalf("parsing package: %s: %s", name, err)
 		}
@@ -495,6 +495,12 @@ func (f *File) genDecl(node ast.Node) bool {
 				signed: info&types.IsUnsigned == 0,
 				str:    value.String(),
 			}
+
+			if c := vspec.Comment; c != nil && len(c.List) == 1 {
+				v.name = strings.TrimSpace(c.Text())
+				v.name = strings.TrimPrefix(v.name, *trimPrefix)
+			}
+
 			f.values = append(f.values, v)
 		}
 	}
