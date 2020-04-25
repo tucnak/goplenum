@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// go command is not available on android
-
-// +build !android
-
 package main
 
 import (
@@ -24,16 +20,15 @@ import (
 // after generating the string method for its type. The rule is that for testdata/x.go
 // we run stringer -type X and then compile and run the program. The resulting
 // binary panics if the String method for X is not correct, including for error cases.
-
 func TestEndToEnd(t *testing.T) {
-	dir, err := ioutil.TempDir("", "stringer")
+	dir, err := ioutil.TempDir("", "enum")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer os.RemoveAll(dir)
 	// Create stringer in temporary directory.
-	stringer := filepath.Join(dir, "stringer.exe")
-	err = run("go", "build", "-o", stringer)
+	stringer := filepath.Join(dir, "enum")
+	err = run(".", "go", "build", "-o", stringer)
 	if err != nil {
 		t.Fatalf("building stringer: %s", err)
 	}
@@ -74,19 +69,23 @@ func TestEndToEnd(t *testing.T) {
 // runs the target binary in directory dir. That binary will panic if the String method is incorrect.
 func stringerCompileAndRun(t *testing.T, dir, stringer, typeName, fileName, transformNameMethod string) {
 	t.Logf("run: %s %s\n", fileName, typeName)
+
 	source := filepath.Join(dir, fileName)
 	err := copy(source, filepath.Join("testdata", fileName))
 	if err != nil {
 		t.Fatalf("copying file to temporary directory: %s", err)
 	}
-	stringSource := filepath.Join(dir, typeName+"_string.go")
+
+	outputName := typeName + ".gen.go"
+
 	// Run stringer in temporary directory.
-	err = run(stringer, "-type", typeName, "-output", stringSource, "-transform", transformNameMethod, source)
+	err = run(dir, stringer, typeName, "-output", outputName, "-transform", transformNameMethod)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	// Run the binary in the temporary directory.
-	err = run("go", "run", stringSource, source)
+	err = run(dir, "go", "run", outputName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -110,8 +109,9 @@ func copy(to, from string) error {
 
 // run runs a single command and returns an error if it does not succeed.
 // os/exec should have this function, to be honest.
-func run(name string, arg ...string) error {
+func run(dir, name string, arg ...string) error {
 	cmd := exec.Command(name, arg...)
+	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()

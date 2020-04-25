@@ -2,6 +2,7 @@ package name_test
 
 import (
 	"fmt"
+
 	"github.com/pascaldekloe/name"
 )
 
