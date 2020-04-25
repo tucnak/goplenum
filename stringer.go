@@ -2,12 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build go1.5
-
-//Enumer is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
-//It started as a fork of Rob Pike’s Stringer tool
+// Enumer is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
+// It started as a fork of Rob Pike’s Stringer tool
 //
-//Please visit http://github.com/alvaroloes/enumer for a comprehensive documentation
+// Please visit http://github.com/tucnak/enum for a comprehensive documentation.
 package main
 
 import (
@@ -262,7 +260,7 @@ func (pkg *Package) check(fs *token.FileSet, astFiles []*ast.File) {
 	}
 	typesPkg, err := config.Check(pkg.dir, fs, astFiles, info)
 	if err != nil {
-		log.Fatalf("checking package: %s", err)
+		log.Printf("checking package: %s", err)
 	}
 	pkg.typesPkg = typesPkg
 }
