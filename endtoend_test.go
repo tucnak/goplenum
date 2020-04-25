@@ -85,7 +85,7 @@ func stringerCompileAndRun(t *testing.T, dir, stringer, typeName, fileName, tran
 	}
 
 	// Run the binary in the temporary directory.
-	err = run(dir, "go", "run", outputName)
+	err = run(dir, "go", "run", fileName, outputName)
 	if err != nil {
 		t.Fatal(err)
 	}

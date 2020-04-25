@@ -653,7 +653,7 @@ func (g *Generator) buildMultipleRuns(runs [][]Value, typeName string) {
 func (g *Generator) buildMap(runs [][]Value, typeName string) {
 	g.Printf("\n")
 	g.declareNameVars(runs, typeName, "")
-	g.Printf("\nvar _%sMap = map[%s]string{\n", typeName, typeName)
+	g.Printf("\nvar enum%sMap = map[%s]string{\n", typeName, typeName)
 	n := 0
 	for _, values := range runs {
 		for _, value := range values {
