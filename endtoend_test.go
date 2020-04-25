@@ -18,7 +18,7 @@ import (
 
 // This file contains a test that compiles and runs each program in testdata
 // after generating the string method for its type. The rule is that for testdata/x.go
-// we run stringer -type X and then compile and run the program. The resulting
+// we run `enum X` and then compile and run the program. The resulting
 // binary panics if the String method for X is not correct, including for error cases.
 func TestEndToEnd(t *testing.T) {
 	dir, err := ioutil.TempDir("", "enum")

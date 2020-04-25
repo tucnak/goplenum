@@ -8,7 +8,7 @@ import (
 //	[1]: type name
 const stringNameToValueMethod = `// enum%[1]s retrieves an enum value from the enum constants string name.
 // Throws an error if the param is not part of the enum.
-func enum%[1]sOf(s string) (%[1]s, error) {
+func %[1]sOf(s string) (%[1]s, error) {
 	if val, ok := enum%[1]sMap[s]; ok {
 		return val, nil
 	}
@@ -68,7 +68,7 @@ func (i *%[1]s) UnmarshalJSON(data []byte) error {
 	}
 
 	var err error
-	*i, err = enum%[1]sOf(s)
+	*i, err = %[1]sOf(s)
 	return err
 }
 `
@@ -88,7 +88,7 @@ func (i %[1]s) MarshalText() ([]byte, error) {
 // UnmarshalText implements the encoding.TextUnmarshaler interface for %[1]s
 func (i *%[1]s) UnmarshalText(text []byte) error {
 	var err error
-	*i, err = enum%[1]sOf(string(text))
+	*i, err = %[1]sOf(string(text))
 	return err
 }
 `
@@ -113,7 +113,7 @@ func (i *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	var err error
-	*i, err = enum%[1]sOf(s)
+	*i, err = %[1]sOf(s)
 	return err
 }
 `
