@@ -6,7 +6,8 @@ import (
 
 // Arguments to format are:
 //	[1]: type name
-const stringNameToValueMethod = `// enum%[1]s retrieves an enum value from the enum constants string name.
+const stringNameToValueMethod = `// %[1]sOf retrieves an enum value from the enum constants string name.
+//
 // Throws an error if the param is not part of the enum.
 func %[1]sOf(s string) (%[1]s, error) {
 	if val, ok := enum%[1]sMap[s]; ok {

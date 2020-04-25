@@ -598,7 +598,8 @@ func (g *Generator) buildOneRun(runs [][]Value, typeName string) {
 //	[1]: type name
 //	[2]: size of index element (8 for uint8 etc.)
 //	[3]: less than zero check (for signed types)
-const stringOneRun = `func (i %[1]s) String() string {
+const stringOneRun = `// String is the text representation of an enum value.
+func (i %[1]s) String() string {
 	if %[3]si >= %[1]s(len(enum%[1]sIndex)-1) {
 		return fmt.Sprintf("%[1]s(%%d)", i)
 	}
@@ -613,7 +614,8 @@ const stringOneRun = `func (i %[1]s) String() string {
 //	[4]: less than zero check (for signed types)
 /*
  */
-const stringOneRunWithOffset = `func (i %[1]s) String() string {
+const stringOneRunWithOffset = `// String is the text representation of an enum value.
+func (i %[1]s) String() string {
 	i -= %[2]s
 	if %[4]si >= %[1]s(len(enum%[1]sIndex)-1) {
 		return fmt.Sprintf("%[1]s(%%d)", i + %[2]s)
@@ -627,19 +629,20 @@ const stringOneRunWithOffset = `func (i %[1]s) String() string {
 func (g *Generator) buildMultipleRuns(runs [][]Value, typeName string) {
 	g.Printf("\n")
 	g.declareIndexAndNameVars(runs, typeName)
+	g.Printf("// String is the text representation of an enum value.\n")
 	g.Printf("func (i %s) String() string {\n", typeName)
 	g.Printf("\tswitch {\n")
 	for i, values := range runs {
 		if len(values) == 1 {
 			g.Printf("\tcase i == %s:\n", &values[0])
-			g.Printf("\t\treturn enum%sRepr_%d\n", typeName, i)
+			g.Printf("\t\treturn enum%sRepr%d\n", typeName, i)
 			continue
 		}
 		g.Printf("\tcase %s <= i && i <= %s:\n", &values[0], &values[len(values)-1])
 		if values[0].value != 0 {
 			g.Printf("\t\ti -= %s\n", &values[0])
 		}
-		g.Printf("\t\treturn enum%sRepr%d[enum%sIndex_%d[i]:enum%sIndex_%d[i+1]]\n",
+		g.Printf("\t\treturn enum%sRepr%d[enum%sIndex%d[i]:enum%sIndex%d[i+1]]\n",
 			typeName, i, typeName, i, typeName, i)
 	}
 	g.Printf("\tdefault:\n")
@@ -666,7 +669,8 @@ func (g *Generator) buildMap(runs [][]Value, typeName string) {
 }
 
 // Argument to format is the type name.
-const stringMap = `func (i %[1]s) String() string {
+const stringMap = `// String is the text representation of an enum value.
+func (i %[1]s) String() string {
 	if str, ok := enum%[1]sMap[i]; ok {
 		return str
 	}

@@ -10,7 +10,7 @@ Enum relies on `//go:generate` to aggregate all enums from the package in a sing
 
 ## Generated functions and methods
 When `enum` is applied to a type, it will generate the following basic methods/functions: 
-* Method `String()`: returns the string representation of the enum value. This makes the enum conform
+* Method `String()`: returns the string representation of an enum value. This makes the enum conform
 the `Stringer` interface, so whenever you print an enum value, you'll get the string name instead of a number.
 * `MarshalJSON()` and `UnmarshalJSON()`. These make the enum conform to the `json.Marshaler` and `json.Unmarshaler` interfaces.
 Very useful to use it in JSON APIs.
