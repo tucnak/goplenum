@@ -6,7 +6,7 @@
 Enum is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
 It's a fork of [alvaroloes/enumer](https://github.com/alvaroloes/enumer), which originally started as a fork of Rob Pike’s [stringer](https://godoc.org/golang.org/x/tools/cmd/stringer).
 
-Enum relies on `//go:generate` to aggregate all enums from the package in a single `enum.go.gen` file.
+Enum relies on `//go:generate` to aggregate all enums from the package in a single `enum.gen.go` file.
 
 ## Generated functions and methods
 When `enum` is applied to a type, it will generate the following basic methods/functions: 
