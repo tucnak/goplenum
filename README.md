@@ -1,7 +1,7 @@
 # Goplenum
-[![GoDoc](https://godoc.org/github.com/tucnak/plenum?status.svg)](https://godoc.org/github.com/tucnak/plenum)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tucnak/plenum)](https://goreportcard.com/report/github.com/tucnak/plenum)
-[![codecov.io](https://codecov.io/gh/tucnak/plenum/coverage.svg)](https://codecov.io/gh/tucnak/plenum)
+[![GoDoc](https://godoc.org/github.com/tucnak/goplenum?status.svg)](https://godoc.org/github.com/tucnak/goplenum)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tucnak/goplenum)](https://goreportcard.com/report/github.com/tucnak/goplenum)
+[![codecov.io](https://codecov.io/gh/tucnak/goplenum/coverage.svg)](https://codecov.io/gh/tucnak/goplenum)
 
 Goplenum is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
 It's a fork of [alvaroloes/enumer](https://github.com/alvaroloes/enumer), which originally started as a fork of Rob Pike’s [stringer](https://godoc.org/golang.org/x/tools/cmd/stringer).
