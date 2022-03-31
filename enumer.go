@@ -10,7 +10,7 @@ const stringNameToValueMethod = `// %[1]sOf retrieves an enum value from the enu
 //
 // Throws an error if the param is not part of the enum.
 func %[1]sOf(s string) (%[1]s, error) {
-	if val, ok := enum%[1]sMap[s]; ok {
+	if val, ok := plenum%[1]sMap[s]; ok {
 		return val, nil
 	}
 	return 0, fmt.Errorf("%%s does not belong to %[1]s values", s)
@@ -21,7 +21,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 	// At this moment, either "g.declareIndexAndNameVars()" or "g.declareNameVars()" has been called
 
 	// Print the slice of values
-	g.Printf("\nvar enum%sValues = []%s{", typeName, typeName)
+	g.Printf("\nvar plenum%sValues = []%s{", typeName, typeName)
 	for _, values := range runs {
 		for _, value := range values {
 			g.Printf("\t%s, ", value.str)
@@ -30,7 +30,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 	g.Printf("}\n\n")
 
 	// Print the map between name and value
-	g.Printf("\nvar enum%sMap = map[string]%s{\n", typeName, typeName)
+	g.Printf("\nvar plenum%sMap = map[string]%s{\n", typeName, typeName)
 	thereAreRuns := len(runs) > 1 && len(runs) <= runsThreshold
 	var n int
 	var runID string
@@ -43,7 +43,7 @@ func (g *Generator) buildBasicExtras(runs [][]Value, typeName string, runsThresh
 		}
 
 		for _, value := range values {
-			g.Printf("\tenum%sRepr%s[%d:%d]: %s,\n", typeName, runID, n, n+len(value.name), &value)
+			g.Printf("\tplenum%sRepr%s[%d:%d]: %s,\n", typeName, runID, n, n+len(value.name), &value)
 			n += len(value.name)
 		}
 	}
