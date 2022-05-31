@@ -1,4 +1,4 @@
-module goplenum
+module github.com/tucnak/goplenum/v2
 
 go 1.10
 
